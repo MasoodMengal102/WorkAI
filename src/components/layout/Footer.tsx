@@ -1,7 +1,7 @@
 import React from "react";
 import Link from "next/link";
 import { BRAND } from "@/config/brand";
-import { Sparkles, Heart, Shield, CheckCircle2 } from "lucide-react";
+import { Sparkles, Heart, Shield, CheckCircle2, Mail, MessageCircle } from "lucide-react";
 
 export function Footer() {
   const currentYear = new Date().getFullYear();
@@ -181,8 +181,49 @@ export function Footer() {
           </div>
         </div>
 
+        {/* Creator & Contact Information */}
+        <div className="mt-12 pt-8 border-t border-slate-200 dark:border-slate-800">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 p-4 sm:p-5 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800/80 shadow-sm text-xs">
+            <div className="flex items-center gap-3">
+              <div className="w-9 h-9 rounded-full bg-indigo-50 dark:bg-indigo-950/60 border border-indigo-200/70 dark:border-indigo-800/70 flex items-center justify-center text-indigo-600 dark:text-indigo-400 font-bold text-xs tracking-wider">
+                MM
+              </div>
+              <div className="text-left">
+                <span className="text-[11px] font-semibold uppercase tracking-wider text-slate-400 dark:text-slate-500 block">
+                  Author & Creator
+                </span>
+                <span className="text-sm font-semibold text-slate-900 dark:text-white">
+                  {BRAND.author.name}
+                </span>
+              </div>
+            </div>
+
+            <div className="flex flex-wrap items-center gap-2.5 sm:gap-4">
+              <a
+                href={BRAND.author.whatsappUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-emerald-50 dark:bg-emerald-950/40 text-emerald-700 dark:text-emerald-400 border border-emerald-200/60 dark:border-emerald-800/60 hover:bg-emerald-100 dark:hover:bg-emerald-900/60 font-medium transition"
+                aria-label={`Contact ${BRAND.author.name} on WhatsApp`}
+              >
+                <MessageCircle className="w-3.5 h-3.5 text-emerald-600 dark:text-emerald-400" />
+                <span>WhatsApp: {BRAND.author.whatsapp}</span>
+              </a>
+
+              <a
+                href={`mailto:${BRAND.author.email}`}
+                className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 border border-slate-200/60 dark:border-slate-700/60 hover:bg-slate-200 dark:hover:bg-slate-700 font-medium transition"
+                aria-label={`Send email to ${BRAND.author.name}`}
+              >
+                <Mail className="w-3.5 h-3.5 text-slate-500 dark:text-slate-400" />
+                <span>{BRAND.author.email}</span>
+              </a>
+            </div>
+          </div>
+        </div>
+
         {/* Bottom Bar */}
-        <div className="mt-12 pt-8 border-t border-slate-200 dark:border-slate-800 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-slate-500">
+        <div className="mt-6 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-slate-500">
           <p>© {currentYear} {BRAND.name}. All rights reserved.</p>
           <div className="flex items-center gap-2">
             <Shield className="w-3.5 h-3.5 text-slate-400" />

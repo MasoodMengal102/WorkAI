@@ -16,6 +16,12 @@ export interface BrandConfig {
   supportEmail: string;
   contactEmail: string;
   legalEntity: string;
+  author: {
+    name: string;
+    whatsapp: string;
+    whatsappUrl: string;
+    email: string;
+  };
   social: {
     twitter: string;
     github: string;
@@ -38,6 +44,12 @@ export const BRAND: BrandConfig = {
   supportEmail: process.env.SUPPORT_EMAIL || "support@workai.example.com",
   contactEmail: process.env.CONTACT_EMAIL || "contact@workai.example.com",
   legalEntity: "WorkAI Platform (Global Initiative)",
+  author: {
+    name: "Masood Mengal",
+    whatsapp: "03461810286",
+    whatsappUrl: "https://wa.me/923461810286",
+    email: "waernamengal643@gmail.com",
+  },
   social: {
     twitter: "https://twitter.com/workai_hub",
     github: "https://github.com/workai-platform",

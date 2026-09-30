@@ -2,7 +2,7 @@ import React from "react";
 import { Metadata } from "next";
 import Link from "next/link";
 import { BRAND } from "@/config/brand";
-import { Sparkles, ShieldCheck, CheckCircle2, Heart } from "lucide-react";
+import { Sparkles, ShieldCheck, CheckCircle2, Heart, Mail, MessageCircle } from "lucide-react";
 
 export const metadata: Metadata = {
   title: `About ${BRAND.name} — Our Mission & Editorial Standards`,
@@ -69,8 +69,28 @@ export default function AboutPage() {
 
           <div className="pt-6 border-t border-slate-100 dark:border-slate-800 flex flex-col sm:flex-row sm:items-center justify-between gap-4 text-xs text-slate-500">
             <div>
-              <span>Entity: {BRAND.legalEntity}</span>
-              <p>Contact: {BRAND.contactEmail}</p>
+              <span className="font-semibold text-slate-900 dark:text-white block">
+                Author & Creator: {BRAND.author.name}
+              </span>
+              <div className="mt-1 flex flex-wrap items-center gap-3">
+                <a
+                  href={BRAND.author.whatsappUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center gap-1 text-emerald-600 dark:text-emerald-400 hover:underline"
+                >
+                  <MessageCircle className="w-3 h-3" />
+                  <span>WhatsApp: {BRAND.author.whatsapp}</span>
+                </a>
+                <span>•</span>
+                <a
+                  href={`mailto:${BRAND.author.email}`}
+                  className="inline-flex items-center gap-1 text-indigo-600 dark:text-indigo-400 hover:underline"
+                >
+                  <Mail className="w-3 h-3" />
+                  <span>{BRAND.author.email}</span>
+                </a>
+              </div>
             </div>
             <Link href="/contact" className="font-semibold text-indigo-600 dark:text-indigo-400 hover:underline">
               Get in touch with our team →
