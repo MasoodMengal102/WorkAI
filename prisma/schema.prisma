@@ -1,0 +1,424 @@
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+enum Role {
+  USER
+  REVIEWER
+  EDITOR
+  ADMIN
+  SUPER_ADMIN
+}
+
+enum PricingStatus {
+  FREE
+  FREEMIUM
+  FREE_TRIAL
+  PAID
+  NOT_VERIFIED
+}
+
+enum VerificationStatus {
+  VERIFIED
+  NEEDS_REVIEW
+  UNVERIFIED
+  ARCHIVED
+}
+
+enum ContentStatus {
+  DRAFT
+  IN_REVIEW
+  PUBLISHED
+  ARCHIVED
+}
+
+enum DifficultyLevel {
+  BEGINNER
+  INTERMEDIATE
+  ADVANCED
+}
+
+model User {
+  id            String          @id @default(cuid())
+  email         String          @unique
+  passwordHash  String
+  name          String?
+  role          Role            @default(USER)
+  createdAt     DateTime        @default(now())
+  updatedAt     DateTime        @updatedAt
+
+  sessions      Session[]
+  favorites     Favorite[]
+  savedWorkflows SavedWorkflow[]
+  generations   AiGeneration[]
+  feedbacks     Feedback[]
+  auditLogs     AuditLog[]
+
+  @@index([email])
+}
+
+model Session {
+  id        String   @id @default(cuid())
+  userId    String
+  token     String   @unique
+  expiresAt DateTime
+  createdAt DateTime @default(now())
+
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([token])
+  @@index([userId])
+}
+
+model Category {
+  id          String   @id @default(cuid())
+  name        String   @unique
+  slug        String   @unique
+  description String
+  icon        String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  tools       Tool[]
+
+  @@index([slug])
+}
+
+model Tool {
+  id                     String             @id @default(cuid())
+  name                   String             @unique
+  slug                   String             @unique
+  description            String
+  categoryId             String
+  subcategory            String?
+  officialUrl            String
+  logoUrl                String?
+  features               String             // JSON string array of key features
+  useCases               String             // JSON string array
+  pricingStatus          PricingStatus      @default(NOT_VERIFIED)
+  freeAvailability       String             // Explicit verified description e.g. "Free tier with 10 credits/mo"
+  platforms              String             // JSON string array e.g. ["Browser", "Desktop"]
+  apiAvailability        Boolean            @default(false)
+  commercialUse          String             @default("Not Verified") // Verified, Prohibited, Not Verified
+  limitations            String
+  editorialNotes         String
+  sourceUrl              String
+  lastVerifiedAt         DateTime           @default(now())
+  verificationStatus     VerificationStatus @default(UNVERIFIED)
+  verificationSourceType String             @default("Official Website")
+  affiliateUrl           String?
+  affiliateStatus        String             @default("NONE") // ACTIVE, NONE, INACTIVE
+  affiliateProgram       String?
+  isFeatured             Boolean            @default(false)
+  viewsCount             Int                @default(0)
+  createdAt              DateTime           @default(now())
+  updatedAt              DateTime           @updatedAt
+
+  category               Category           @relation(fields: [categoryId], references: [id])
+  sources                ToolSource[]
+  verifications          ToolVerification[]
+  favorites              Favorite[]
+  affiliateClicks        AffiliateClick[]
+  comparisonsAsA         Comparison[]       @relation("ToolA")
+  comparisonsAsB         Comparison[]       @relation("ToolB")
+  workflowSteps          WorkflowStep[]     @relation("RecommendedTool")
+
+  @@index([slug])
+  @@index([categoryId])
+  @@index([pricingStatus])
+  @@index([verificationStatus])
+}
+
+model ToolSource {
+  id            String   @id @default(cuid())
+  toolId        String
+  title         String
+  url           String
+  sourceType    String   // Official Website, Pricing Page, Terms, API Docs
+  lastCheckedAt DateTime @default(now())
+
+  tool          Tool     @relation(fields: [toolId], references: [id], onDelete: Cascade)
+
+  @@index([toolId])
+}
+
+model ToolVerification {
+  id         String             @id @default(cuid())
+  toolId     String
+  reviewer   String
+  status     VerificationStatus
+  notes      String
+  verifiedAt DateTime           @default(now())
+
+  tool       Tool               @relation(fields: [toolId], references: [id], onDelete: Cascade)
+
+  @@index([toolId])
+}
+
+model Workflow {
+  id             String          @id @default(cuid())
+  title          String
+  slug           String          @unique
+  description    String
+  category       String
+  difficulty     DifficultyLevel @default(BEGINNER)
+  estimatedTime  String
+  targetAudience String
+  goals          String          // JSON array of goals
+  prerequisites  String          // JSON array of prereqs
+  status         ContentStatus   @default(PUBLISHED)
+  lastReviewedAt DateTime        @default(now())
+  createdAt      DateTime        @default(now())
+  updatedAt      DateTime        @updatedAt
+
+  steps          WorkflowStep[]
+  savedByUsers   SavedWorkflow[]
+
+  @@index([slug])
+  @@index([category])
+}
+
+model WorkflowStep {
+  id                String   @id @default(cuid())
+  workflowId        String
+  stepNumber        Int
+  title             String
+  explanation       String
+  action            String
+  recommendedToolId String?
+  alternativeTools  String?  // JSON array of tool names
+  whyItHelps        String
+  officialSiteUrl   String?
+  relatedTutorial   String?
+  estimatedTime     String
+  promptTemplate    String?
+
+  workflow          Workflow @relation(fields: [workflowId], references: [id], onDelete: Cascade)
+  recommendedTool   Tool?    @relation("RecommendedTool", fields: [recommendedToolId], references: [id], onDelete: SetNull)
+
+  @@index([workflowId])
+  @@index([stepNumber])
+}
+
+model UseCase {
+  id                 String        @id @default(cuid())
+  title              String
+  slug               String        @unique
+  targetRole         String
+  summary            String
+  problems           String        // JSON array of common hurdles
+  opportunities      String        // JSON array of AI leverage opportunities
+  practicalSolutions String        // JSON array of solutions
+  relatedTools       String        // JSON array of tool slugs
+  relatedWorkflows   String        // JSON array of workflow slugs
+  status             ContentStatus @default(PUBLISHED)
+  createdAt          DateTime      @default(now())
+  updatedAt          DateTime      @updatedAt
+
+  @@index([slug])
+}
+
+model Guide {
+  id                String          @id @default(cuid())
+  title             String
+  slug              String          @unique
+  intro             String
+  content           String          // Markdown content
+  tableOfContents   String          // JSON array of { title, anchor }
+  practicalSteps    String          // JSON array of steps
+  difficulty        DifficultyLevel @default(BEGINNER)
+  estimatedReadTime String
+  authorName        String          @default("WorkAI Editorial Team")
+  reviewerName      String          @default("WorkAI Verification Desk")
+  status            ContentStatus   @default(PUBLISHED)
+  lastReviewedAt    DateTime        @default(now())
+  createdAt         DateTime        @default(now())
+  updatedAt         DateTime        @updatedAt
+
+  @@index([slug])
+  @@index([status])
+}
+
+model Comparison {
+  id              String        @id @default(cuid())
+  slug            String        @unique
+  title           String
+  toolAId         String
+  toolBId         String
+  summary         String
+  keyDifferences  String        // JSON array
+  strengthsA      String        // JSON array
+  strengthsB      String        // JSON array
+  limitationsA    String        // JSON array
+  limitationsB    String        // JSON array
+  verdict         String
+  status          ContentStatus @default(PUBLISHED)
+  createdAt       DateTime      @default(now())
+  updatedAt       DateTime      @updatedAt
+
+  toolA           Tool          @relation("ToolA", fields: [toolAId], references: [id], onDelete: Cascade)
+  toolB           Tool          @relation("ToolB", fields: [toolBId], references: [id], onDelete: Cascade)
+
+  @@index([slug])
+}
+
+model AiService {
+  id               String   @id @default(cuid())
+  name             String
+  slug             String   @unique
+  description      String
+  category         String
+  inputSchema      String   // JSON schema of input fields
+  rateLimitMinutes Int      @default(5)
+  tokenCeiling     Int      @default(2000)
+  isAvailable      Boolean  @default(true)
+  createdAt        DateTime @default(now())
+  updatedAt        DateTime @updatedAt
+
+  @@index([slug])
+}
+
+model AiGeneration {
+  id               String   @id @default(cuid())
+  userId           String?
+  serviceSlug      String
+  inputParams      String   // Sanitized JSON
+  generatedContent String
+  tokensUsed       Int      @default(0)
+  provider         String
+  model            String
+  latencyMs        Int      @default(0)
+  createdAt        DateTime @default(now())
+
+  user             User?    @relation(fields: [userId], references: [id], onDelete: SetNull)
+
+  @@index([userId])
+  @@index([serviceSlug])
+  @@index([createdAt])
+}
+
+model Favorite {
+  id        String   @id @default(cuid())
+  userId    String
+  toolId    String
+  createdAt DateTime @default(now())
+
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  tool      Tool     @relation(fields: [toolId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, toolId])
+  @@index([userId])
+  @@index([toolId])
+}
+
+model SavedWorkflow {
+  id         String   @id @default(cuid())
+  userId     String
+  workflowId String
+  createdAt  DateTime @default(now())
+
+  user       User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  workflow   Workflow @relation(fields: [workflowId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, workflowId])
+  @@index([userId])
+  @@index([workflowId])
+}
+
+model AffiliateClick {
+  id        String   @id @default(cuid())
+  toolId    String
+  referrer  String?
+  ipHash    String?
+  userAgent String?
+  createdAt DateTime @default(now())
+
+  tool      Tool     @relation(fields: [toolId], references: [id], onDelete: Cascade)
+
+  @@index([toolId])
+  @@index([createdAt])
+}
+
+model Feedback {
+  id         String   @id @default(cuid())
+  pagePath   String
+  entityType String?
+  entityId   String?
+  isHelpful  Boolean
+  message    String?
+  ipHash     String?
+  userId     String?
+  createdAt  DateTime @default(now())
+
+  user       User?    @relation(fields: [userId], references: [id], onDelete: SetNull)
+
+  @@index([pagePath])
+  @@index([createdAt])
+}
+
+model ContactMessage {
+  id        String   @id @default(cuid())
+  name      String
+  email     String
+  subject   String
+  message   String
+  isRead    Boolean  @default(false)
+  status    String   @default("NEW")
+  ipHash    String?
+  createdAt DateTime @default(now())
+
+  @@index([isRead])
+  @@index([createdAt])
+}
+
+model UsageLog {
+  id              String   @id @default(cuid())
+  endpoint        String
+  provider        String
+  model           String
+  tokensEstimated Int      @default(0)
+  costEstimated   Float    @default(0.0)
+  status          String   @default("SUCCESS")
+  latencyMs       Int      @default(0)
+  ipHash          String?
+  createdAt       DateTime @default(now())
+
+  @@index([endpoint])
+  @@index([provider])
+  @@index([createdAt])
+}
+
+model AuditLog {
+  id            String   @id @default(cuid())
+  adminId       String?
+  action        String
+  entityType    String
+  entityId      String?
+  previousValue String?
+  newValue      String?
+  ipAddress     String?
+  createdAt     DateTime @default(now())
+
+  admin         User?    @relation(fields: [adminId], references: [id], onDelete: SetNull)
+
+  @@index([adminId])
+  @@index([action])
+  @@index([createdAt])
+}
+
+model SystemAlert {
+  id         String   @id @default(cuid())
+  severity   String   // INFO, WARNING, ERROR, CRITICAL
+  title      String
+  details    String
+  isResolved Boolean  @default(false)
+  createdAt  DateTime @default(now())
+
+  @@index([severity])
+  @@index([isResolved])
+}

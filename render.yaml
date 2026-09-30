@@ -1,0 +1,40 @@
+databases:
+  - name: workai-postgres
+    databaseName: workai
+    user: workai_user
+    plan: free
+    region: oregon
+    ipAllowList: []
+
+services:
+  - type: web
+    name: workai
+    runtime: node
+    plan: free
+    region: oregon
+    buildCommand: "npm install && npx prisma generate && npm run build"
+    startCommand: "npm run start"
+    healthCheckPath: /api/health
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: DATABASE_URL
+        fromDatabase:
+          name: workai-postgres
+          property: connectionString
+      - key: AUTH_SECRET
+        generateValue: true
+      - key: BASE_URL
+        value: https://workai.onrender.com
+      - key: DEFAULT_AI_PROVIDER
+        value: gemini
+      - key: DEFAULT_AI_MODEL
+        value: gemini-1.5-flash
+      - key: ADSENSE_ENABLED
+        value: "false"
+      - key: RATE_LIMIT_ENABLED
+        value: "true"
+      - key: COOKIE_CONSENT_ENABLED
+        value: "true"
+      - key: AFFILIATE_TRACKING_ENABLED
+        value: "true"
