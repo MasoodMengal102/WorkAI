@@ -3,6 +3,7 @@
 import React, { useState } from "react";
 import Link from "next/link";
 import { WorkflowStepItem } from "@/types";
+import { InlineMarkdown } from "@/components/content/MarkdownRenderer";
 import { Clock, Check, Copy, ExternalLink, Sparkles, HelpCircle } from "lucide-react";
 
 interface WorkflowStepViewProps {
@@ -41,14 +42,14 @@ export function WorkflowStepView({ step }: WorkflowStepViewProps) {
         {/* Explanation & Action */}
         <div className="space-y-2 text-sm text-slate-700 dark:text-slate-300">
           <p className="leading-relaxed text-slate-600 dark:text-slate-400">
-            {step.explanation}
+            <InlineMarkdown text={step.explanation} />
           </p>
           <div className="p-3.5 rounded-2xl bg-indigo-50/60 dark:bg-indigo-950/30 border border-indigo-100 dark:border-indigo-900/50">
             <span className="font-bold text-xs uppercase tracking-wider text-indigo-700 dark:text-indigo-300 block mb-1">
               Required Action:
             </span>
             <p className="text-xs sm:text-sm text-slate-900 dark:text-slate-100 font-medium">
-              {step.action}
+              <InlineMarkdown text={step.action} />
             </p>
           </div>
         </div>
@@ -110,7 +111,7 @@ export function WorkflowStepView({ step }: WorkflowStepViewProps) {
           <HelpCircle className="w-3.5 h-3.5 flex-shrink-0 mt-0.5 text-slate-400" />
           <span>
             <strong className="text-slate-700 dark:text-slate-300">Why it helps: </strong>
-            {step.whyItHelps}
+            <InlineMarkdown text={step.whyItHelps} />
           </span>
         </div>
 

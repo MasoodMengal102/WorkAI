@@ -6,6 +6,7 @@ import { dataService } from "@/lib/db";
 import { ToolCard } from "@/components/tools/ToolCard";
 import { HelpfulFeedback } from "@/components/feedback/HelpfulFeedback";
 import { InArticleAd, BottomAd } from "@/components/ads/AdSlot";
+import { InlineMarkdown } from "@/components/content/MarkdownRenderer";
 import { Briefcase, AlertCircle, Sparkles, CheckCircle2, Layers, ArrowRight } from "lucide-react";
 
 interface Props {
@@ -64,7 +65,7 @@ export default async function UseCaseDetailPage({ params }: Props) {
           </h1>
 
           <p className="text-sm sm:text-base text-slate-700 dark:text-slate-300 leading-relaxed">
-            {useCase.summary}
+            <InlineMarkdown text={useCase.summary} />
           </p>
         </div>
 
@@ -82,7 +83,7 @@ export default async function UseCaseDetailPage({ params }: Props) {
               {useCase.problems.map((prob, i) => (
                 <li key={i} className="flex items-start gap-2">
                   <span className="text-rose-500 font-bold">•</span>
-                  <span>{prob}</span>
+                  <span><InlineMarkdown text={prob} /></span>
                 </li>
               ))}
             </ul>
@@ -98,7 +99,7 @@ export default async function UseCaseDetailPage({ params }: Props) {
               {useCase.opportunities.map((opp, i) => (
                 <li key={i} className="flex items-start gap-2">
                   <span className="text-emerald-500 font-bold">•</span>
-                  <span>{opp}</span>
+                  <span><InlineMarkdown text={opp} /></span>
                 </li>
               ))}
             </ul>
@@ -114,7 +115,7 @@ export default async function UseCaseDetailPage({ params }: Props) {
             {useCase.practicalSolutions.map((sol, i) => (
               <div key={i} className="p-4 rounded-2xl bg-slate-50 dark:bg-slate-950/60 border border-slate-200/60 dark:border-slate-800 text-xs sm:text-sm text-slate-700 dark:text-slate-300 flex items-start gap-3">
                 <CheckCircle2 className="w-4 h-4 text-emerald-500 flex-shrink-0 mt-0.5" />
-                <span>{sol}</span>
+                <span><InlineMarkdown text={sol} /></span>
               </div>
             ))}
           </div>

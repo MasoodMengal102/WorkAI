@@ -6,6 +6,7 @@ import Link from "next/link";
 import { AI_SERVICES } from "@/data/ai-services";
 import { HelpfulFeedback } from "@/components/feedback/HelpfulFeedback";
 import { InArticleAd, BottomAd } from "@/components/ads/AdSlot";
+import { MarkdownRenderer, InlineMarkdown } from "@/components/content/MarkdownRenderer";
 import {
   Sparkles,
   Loader2,
@@ -109,7 +110,7 @@ export default function ServiceRunnerPage({ params }: { params: { slug: string }
           </h1>
 
           <p className="text-sm sm:text-base text-slate-600 dark:text-slate-400 leading-relaxed">
-            {service.description}
+            <InlineMarkdown text={service.description} />
           </p>
         </div>
 
@@ -229,8 +230,8 @@ export default function ServiceRunnerPage({ params }: { params: { slug: string }
                 </div>
               </div>
 
-              <div className="p-5 rounded-2xl bg-slate-950 text-slate-200 text-xs sm:text-sm font-sans leading-relaxed whitespace-pre-wrap border border-slate-800 max-h-[500px] overflow-y-auto">
-                {output}
+              <div className="p-6 rounded-2xl bg-slate-50 dark:bg-slate-900 text-slate-800 dark:text-slate-200 text-xs sm:text-sm leading-relaxed border border-slate-200 dark:border-slate-800 max-h-[600px] overflow-y-auto shadow-inner">
+                <MarkdownRenderer content={output} />
               </div>
             </div>
           )}

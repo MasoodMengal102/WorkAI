@@ -4,6 +4,7 @@ import Link from "next/link";
 import { dataService } from "@/lib/db";
 import { BookOpen, Clock, ArrowRight } from "lucide-react";
 import { TopAd, BottomAd } from "@/components/ads/AdSlot";
+import { InlineMarkdown } from "@/components/content/MarkdownRenderer";
 
 export const metadata: Metadata = {
   title: "Practical AI Guides & Editorial Tutorials (20+ In-Depth Guides)",
@@ -54,7 +55,7 @@ export default async function GuidesIndexPage() {
                 </h2>
 
                 <p className="mt-2 text-xs sm:text-sm text-slate-600 dark:text-slate-400 line-clamp-3 leading-relaxed">
-                  {guide.intro}
+                  <InlineMarkdown text={guide.intro} />
                 </p>
               </div>
 

@@ -4,6 +4,7 @@ import Link from "next/link";
 import { dataService } from "@/lib/db";
 import { Briefcase, ArrowRight } from "lucide-react";
 import { TopAd, BottomAd } from "@/components/ads/AdSlot";
+import { InlineMarkdown } from "@/components/content/MarkdownRenderer";
 
 export const metadata: Metadata = {
   title: "AI Solutions by Role & Profession (15+ Curated Use Cases)",
@@ -48,7 +49,7 @@ export default async function UseCasesIndexPage() {
                 </h2>
 
                 <p className="mt-2 text-xs sm:text-sm text-slate-600 dark:text-slate-400 line-clamp-3 leading-relaxed">
-                  {uc.summary}
+                  <InlineMarkdown text={uc.summary} />
                 </p>
               </div>
 

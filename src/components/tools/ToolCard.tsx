@@ -3,6 +3,7 @@ import Link from "next/link";
 import { ToolItem } from "@/types";
 import { VerificationBadge } from "./VerificationBadge";
 import { ExternalLink, ArrowRight, Monitor, Globe, Smartphone, Terminal } from "lucide-react";
+import { InlineMarkdown } from "@/components/content/MarkdownRenderer";
 
 interface ToolCardProps {
   tool: ToolItem;
@@ -65,13 +66,13 @@ export function ToolCard({ tool }: ToolCardProps) {
           </h3>
         </Link>
         <p className="mt-2 text-xs sm:text-sm text-slate-600 dark:text-slate-400 leading-relaxed line-clamp-2">
-          {tool.description}
+          <InlineMarkdown text={tool.description} />
         </p>
 
         {/* Free Availability Detail */}
         <div className="mt-3.5 p-2.5 rounded-xl bg-slate-50 dark:bg-slate-950/60 border border-slate-100 dark:border-slate-800/60 text-[11px] text-slate-600 dark:text-slate-400">
           <span className="font-semibold text-slate-900 dark:text-slate-200">Free Tier: </span>
-          {tool.freeAvailability}
+          <InlineMarkdown text={tool.freeAvailability} />
         </div>
 
         {/* Platforms & Badges */}

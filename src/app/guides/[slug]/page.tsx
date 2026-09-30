@@ -5,6 +5,7 @@ import Link from "next/link";
 import { dataService } from "@/lib/db";
 import { HelpfulFeedback } from "@/components/feedback/HelpfulFeedback";
 import { InArticleAd, BottomAd } from "@/components/ads/AdSlot";
+import { MarkdownRenderer, InlineMarkdown } from "@/components/content/MarkdownRenderer";
 import { BookOpen, Clock, User, ShieldCheck, CheckCircle2, ArrowRight } from "lucide-react";
 import { BRAND } from "@/config/brand";
 
@@ -97,7 +98,7 @@ export default async function GuideDetailPage({ params }: Props) {
           </h1>
 
           <p className="text-sm sm:text-base text-slate-700 dark:text-slate-300 leading-relaxed border-t border-slate-100 dark:border-slate-800 pt-4 font-normal">
-            {guide.intro}
+            <InlineMarkdown text={guide.intro} />
           </p>
         </header>
 
@@ -125,10 +126,8 @@ export default async function GuideDetailPage({ params }: Props) {
         <InArticleAd />
 
         {/* Main Editorial Content */}
-        <div className="mt-8 p-6 sm:p-10 rounded-3xl bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800 shadow-sm prose dark:prose-invert max-w-none text-slate-800 dark:text-slate-200 leading-relaxed text-sm sm:text-base">
-          <div className="space-y-6 whitespace-pre-line">
-            {guide.content}
-          </div>
+        <div className="mt-8 p-6 sm:p-10 rounded-3xl bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800 shadow-sm">
+          <MarkdownRenderer content={guide.content} />
         </div>
 
         {/* Actionable Practical Steps Checklist */}
@@ -144,7 +143,7 @@ export default async function GuideDetailPage({ params }: Props) {
                   <span className="w-5 h-5 rounded-full bg-emerald-100 dark:bg-emerald-950 text-emerald-700 dark:text-emerald-300 text-xs font-bold flex items-center justify-center flex-shrink-0 mt-0.5">
                     {idx + 1}
                   </span>
-                  <span>{step}</span>
+                  <span><InlineMarkdown text={step} /></span>
                 </li>
               ))}
             </ul>

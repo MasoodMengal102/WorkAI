@@ -4,6 +4,7 @@ import React, { useState } from "react";
 import Link from "next/link";
 import { Sparkles, ArrowRight, CheckCircle2, ShieldAlert, BookOpen, Layers, ExternalLink, Loader2 } from "lucide-react";
 import { GoalAnalysisResult } from "@/types";
+import { InlineMarkdown } from "@/components/content/MarkdownRenderer";
 
 export function GoalPrompt() {
   const [goal, setGoal] = useState("");
@@ -175,7 +176,7 @@ export function GoalPrompt() {
                       )}
                     </div>
                     <p className="text-xs sm:text-sm text-slate-600 dark:text-slate-400 mt-1 leading-relaxed">
-                      {step.action}
+                      <InlineMarkdown text={step.action} />
                     </p>
                   </div>
                 </div>

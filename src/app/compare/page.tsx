@@ -4,6 +4,7 @@ import Link from "next/link";
 import { dataService } from "@/lib/db";
 import { GitCompare, ArrowRight, CheckCircle2 } from "lucide-react";
 import { TopAd, BottomAd } from "@/components/ads/AdSlot";
+import { InlineMarkdown } from "@/components/content/MarkdownRenderer";
 
 export const metadata: Metadata = {
   title: "Objective AI Tool Comparisons (10+ Head-to-Head Showdowns)",
@@ -54,14 +55,14 @@ export default async function ComparisonsIndexPage() {
                 </h2>
 
                 <p className="mt-2 text-xs sm:text-sm text-slate-600 dark:text-slate-400 leading-relaxed line-clamp-2">
-                  {comp.summary}
+                  <InlineMarkdown text={comp.summary} />
                 </p>
 
                 <div className="mt-4 pt-3 border-t border-slate-100 dark:border-slate-800 space-y-1.5">
                   {comp.keyDifferences.slice(0, 2).map((diff, i) => (
                     <div key={i} className="text-xs text-slate-500 flex items-start gap-2">
                       <span className="text-indigo-600 dark:text-indigo-400 font-bold">•</span>
-                      <span className="line-clamp-1">{diff}</span>
+                      <span className="line-clamp-1"><InlineMarkdown text={diff} /></span>
                     </div>
                   ))}
                 </div>

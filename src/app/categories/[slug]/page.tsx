@@ -6,6 +6,7 @@ import { dataService } from "@/lib/db";
 import { ToolCard } from "@/components/tools/ToolCard";
 import { WorkflowCard } from "@/components/workflows/WorkflowCard";
 import { TopAd, BottomAd } from "@/components/ads/AdSlot";
+import { InlineMarkdown } from "@/components/content/MarkdownRenderer";
 import { Layers, ArrowRight, BookOpen, Briefcase } from "lucide-react";
 
 interface Props {
@@ -63,7 +64,7 @@ export default async function CategoryDetailPage({ params }: Props) {
             {category.name}
           </h1>
           <p className="mt-3 text-sm sm:text-base text-slate-600 dark:text-slate-400 leading-relaxed">
-            {category.description}
+            <InlineMarkdown text={category.description} />
           </p>
         </div>
 

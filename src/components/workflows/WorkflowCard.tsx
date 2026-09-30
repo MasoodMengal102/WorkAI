@@ -2,6 +2,7 @@ import React from "react";
 import Link from "next/link";
 import { WorkflowItem } from "@/types";
 import { Clock, Layers, ArrowRight, UserCheck } from "lucide-react";
+import { InlineMarkdown } from "@/components/content/MarkdownRenderer";
 
 interface WorkflowCardProps {
   workflow: WorkflowItem;
@@ -36,7 +37,7 @@ export function WorkflowCard({ workflow }: WorkflowCardProps) {
         </Link>
 
         <p className="mt-2 text-xs sm:text-sm text-slate-600 dark:text-slate-400 leading-relaxed line-clamp-2">
-          {workflow.description}
+          <InlineMarkdown text={workflow.description} />
         </p>
 
         <div className="mt-4 pt-3 border-t border-slate-100 dark:border-slate-800/60 flex flex-wrap items-center gap-4 text-xs text-slate-500">

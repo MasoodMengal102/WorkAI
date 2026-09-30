@@ -6,6 +6,7 @@ import { dataService } from "@/lib/db";
 import { WorkflowStepView } from "@/components/workflows/WorkflowStepView";
 import { HelpfulFeedback } from "@/components/feedback/HelpfulFeedback";
 import { InArticleAd, BottomAd } from "@/components/ads/AdSlot";
+import { InlineMarkdown } from "@/components/content/MarkdownRenderer";
 import { Clock, Layers, UserCheck, CheckCircle2, ArrowRight } from "lucide-react";
 
 interface Props {
@@ -85,14 +86,14 @@ export default async function WorkflowDetailPage({ params }: Props) {
           </h1>
 
           <p className="text-sm sm:text-base text-slate-700 dark:text-slate-300 leading-relaxed">
-            {workflow.description}
+            <InlineMarkdown text={workflow.description} />
           </p>
 
           <div className="p-4 rounded-2xl bg-slate-50 dark:bg-slate-950/60 border border-slate-100 dark:border-slate-800 text-xs sm:text-sm text-slate-600 dark:text-slate-400 flex items-start gap-3">
             <UserCheck className="w-5 h-5 text-indigo-600 dark:text-indigo-400 flex-shrink-0 mt-0.5" />
             <div>
               <strong className="text-slate-900 dark:text-slate-200">Target Audience: </strong>
-              {workflow.targetAudience}
+              <InlineMarkdown text={workflow.targetAudience} />
             </div>
           </div>
 
@@ -106,7 +107,7 @@ export default async function WorkflowDetailPage({ params }: Props) {
                 {workflow.goals.map((goal) => (
                   <li key={goal} className="flex items-start gap-2">
                     <CheckCircle2 className="w-3.5 h-3.5 text-emerald-500 flex-shrink-0 mt-0.5" />
-                    <span>{goal}</span>
+                    <span><InlineMarkdown text={goal} /></span>
                   </li>
                 ))}
               </ul>

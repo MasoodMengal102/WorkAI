@@ -5,6 +5,7 @@ import Link from "next/link";
 import { dataService } from "@/lib/db";
 import { HelpfulFeedback } from "@/components/feedback/HelpfulFeedback";
 import { InArticleAd, BottomAd } from "@/components/ads/AdSlot";
+import { InlineMarkdown } from "@/components/content/MarkdownRenderer";
 import { GitCompare, CheckCircle2, AlertTriangle, ArrowRight, ExternalLink } from "lucide-react";
 
 interface Props {
@@ -58,7 +59,7 @@ export default async function ComparisonDetailPage({ params }: Props) {
           </h1>
 
           <p className="text-sm sm:text-base text-slate-700 dark:text-slate-300 leading-relaxed">
-            {comparison.summary}
+            <InlineMarkdown text={comparison.summary} />
           </p>
         </div>
 
@@ -148,7 +149,7 @@ export default async function ComparisonDetailPage({ params }: Props) {
                 <span className="w-6 h-6 rounded-full bg-indigo-50 dark:bg-indigo-950 text-indigo-600 dark:text-indigo-400 font-bold text-xs flex items-center justify-center flex-shrink-0 mt-0.5">
                   {i + 1}
                 </span>
-                <span className="leading-relaxed">{diff}</span>
+                <span className="leading-relaxed"><InlineMarkdown text={diff} /></span>
               </li>
             ))}
           </ul>
@@ -166,7 +167,7 @@ export default async function ComparisonDetailPage({ params }: Props) {
               {comparison.strengthsA.map((str, i) => (
                 <li key={i} className="flex items-start gap-2">
                   <span className="text-emerald-500 font-bold">•</span>
-                  <span>{str}</span>
+                  <span><InlineMarkdown text={str} /></span>
                 </li>
               ))}
             </ul>
@@ -181,7 +182,7 @@ export default async function ComparisonDetailPage({ params }: Props) {
               {comparison.strengthsB.map((str, i) => (
                 <li key={i} className="flex items-start gap-2">
                   <span className="text-emerald-500 font-bold">•</span>
-                  <span>{str}</span>
+                  <span><InlineMarkdown text={str} /></span>
                 </li>
               ))}
             </ul>
@@ -199,7 +200,7 @@ export default async function ComparisonDetailPage({ params }: Props) {
               {comparison.limitationsA.map((lim, i) => (
                 <li key={i} className="flex items-start gap-2">
                   <span className="text-amber-500 font-bold">•</span>
-                  <span>{lim}</span>
+                  <span><InlineMarkdown text={lim} /></span>
                 </li>
               ))}
             </ul>
@@ -214,7 +215,7 @@ export default async function ComparisonDetailPage({ params }: Props) {
               {comparison.limitationsB.map((lim, i) => (
                 <li key={i} className="flex items-start gap-2">
                   <span className="text-amber-500 font-bold">•</span>
-                  <span>{lim}</span>
+                  <span><InlineMarkdown text={lim} /></span>
                 </li>
               ))}
             </ul>
@@ -227,7 +228,7 @@ export default async function ComparisonDetailPage({ params }: Props) {
             Editorial Verdict & Workflow Fit
           </h2>
           <p className="text-xs sm:text-sm text-slate-700 dark:text-slate-300 leading-relaxed">
-            {comparison.verdict}
+            <InlineMarkdown text={comparison.verdict} />
           </p>
         </section>
 

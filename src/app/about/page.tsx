@@ -34,7 +34,7 @@ export default function AboutPage() {
             The internet is flooded with hundreds of generic AI directories that exist solely as affiliate link farms. They scrape random software tools, generate robotic summaries, invent fake 5-star ratings, and rank whichever company pays the highest commission.
           </p>
           <p>
-            When someone asks: <em>"I want to make YouTube videos with AI"</em> or <em>"I want to build a resume,"</em> they do not need 500 random logos. They need an **actionable, step-by-step workflow**, transparent pricing facts, honest limitations, and verified free tools.
+            When someone asks: <em>"I want to make YouTube videos with AI"</em> or <em>"I want to build a resume,"</em> they do not need 500 random logos. They need an <strong>actionable, step-by-step workflow</strong>, transparent pricing facts, honest limitations, and verified free tools.
           </p>
 
           <h3 className="text-lg font-bold text-slate-900 dark:text-white pt-4">

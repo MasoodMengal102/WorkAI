@@ -160,4 +160,34 @@ export interface UserSession {
   email: string;
   name?: string;
   role: Role;
+  emailVerified: boolean;
+  isActive: boolean;
+  createdAt?: string;
+}
+
+export interface UserProfile {
+  id: string;
+  email: string;
+  name?: string;
+  role: Role;
+  emailVerified: boolean;
+  emailVerifiedAt?: string;
+  isActive: boolean;
+  lastLoginAt?: string;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface AuditLogItem {
+  id: string;
+  adminId?: string;
+  adminEmail?: string;
+  action: string;
+  entityType: string;
+  entityId?: string;
+  details?: string;
+  previousValue?: string;
+  newValue?: string;
+  ipAddress?: string;
+  createdAt: string;
 }

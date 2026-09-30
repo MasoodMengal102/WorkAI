@@ -44,28 +44,41 @@ enum DifficultyLevel {
 }
 
 model User {
-  id            String          @id @default(cuid())
-  email         String          @unique
-  passwordHash  String
-  name          String?
-  role          Role            @default(USER)
-  createdAt     DateTime        @default(now())
-  updatedAt     DateTime        @updatedAt
+  id                    String          @id @default(cuid())
+  email                 String          @unique
+  passwordHash          String
+  name                  String?
+  role                  Role            @default(USER)
+  emailVerified         Boolean         @default(false)
+  emailVerifiedAt       DateTime?
+  verificationToken     String?         @unique
+  verificationExpiresAt DateTime?
+  passwordResetToken    String?         @unique
+  passwordResetExpiresAt DateTime?
+  isActive              Boolean         @default(true)
+  lastLoginAt           DateTime?
+  createdAt             DateTime        @default(now())
+  updatedAt             DateTime        @updatedAt
 
-  sessions      Session[]
-  favorites     Favorite[]
-  savedWorkflows SavedWorkflow[]
-  generations   AiGeneration[]
-  feedbacks     Feedback[]
-  auditLogs     AuditLog[]
+  sessions              Session[]
+  favorites             Favorite[]
+  savedWorkflows        SavedWorkflow[]
+  generations           AiGeneration[]
+  feedbacks             Feedback[]
+  auditLogs             AuditLog[]
 
   @@index([email])
+  @@index([role])
+  @@index([verificationToken])
+  @@index([passwordResetToken])
 }
 
 model Session {
   id        String   @id @default(cuid())
   userId    String
   token     String   @unique
+  ipAddress String?
+  userAgent String?
   expiresAt DateTime
   createdAt DateTime @default(now())
 
@@ -399,6 +412,7 @@ model AuditLog {
   action        String
   entityType    String
   entityId      String?
+  details       String?
   previousValue String?
   newValue      String?
   ipAddress     String?

@@ -6,6 +6,7 @@ import { dataService } from "@/lib/db";
 import { VerificationBadge } from "@/components/tools/VerificationBadge";
 import { HelpfulFeedback } from "@/components/feedback/HelpfulFeedback";
 import { InArticleAd, BottomAd } from "@/components/ads/AdSlot";
+import { InlineMarkdown } from "@/components/content/MarkdownRenderer";
 import {
   ExternalLink,
   CheckCircle2,
@@ -140,7 +141,7 @@ export default async function ToolDetailPage({ params }: Props) {
           </div>
 
           <p className="text-sm sm:text-base text-slate-700 dark:text-slate-300 leading-relaxed border-t border-slate-100 dark:border-slate-800 pt-4">
-            {tool.description}
+            <InlineMarkdown text={tool.description} />
           </p>
 
           {/* Key Facts Summary Matrix */}
@@ -190,7 +191,7 @@ export default async function ToolDetailPage({ params }: Props) {
                 {tool.features.map((feature) => (
                   <li key={feature} className="flex items-start gap-2.5 text-xs sm:text-sm text-slate-700 dark:text-slate-300">
                     <CheckCircle2 className="w-4 h-4 text-indigo-600 dark:text-indigo-400 flex-shrink-0 mt-0.5" />
-                    <span>{feature}</span>
+                    <span><InlineMarkdown text={feature} /></span>
                   </li>
                 ))}
               </ul>
@@ -204,7 +205,7 @@ export default async function ToolDetailPage({ params }: Props) {
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                 {tool.useCases.map((uc) => (
                   <div key={uc} className="p-3 rounded-2xl bg-slate-50 dark:bg-slate-950/60 border border-slate-200/60 dark:border-slate-800 text-xs text-slate-800 dark:text-slate-200 font-medium">
-                    {uc}
+                    <InlineMarkdown text={uc} />
                   </div>
                 ))}
               </div>
@@ -217,7 +218,7 @@ export default async function ToolDetailPage({ params }: Props) {
                 <span>Known Limitations & Trade-offs</span>
               </h2>
               <p className="text-xs sm:text-sm text-slate-600 dark:text-slate-400 leading-relaxed">
-                {tool.limitations}
+                <InlineMarkdown text={tool.limitations} />
               </p>
             </section>
 
@@ -227,7 +228,7 @@ export default async function ToolDetailPage({ params }: Props) {
                 WorkAI Editorial Assessment
               </h2>
               <p className="text-xs sm:text-sm text-slate-600 dark:text-slate-400 leading-relaxed">
-                {tool.editorialNotes}
+                <InlineMarkdown text={tool.editorialNotes} />
               </p>
               <div className="mt-4 pt-3 border-t border-slate-100 dark:border-slate-800 text-xs text-slate-500">
                 <span>Verified Source: </span>

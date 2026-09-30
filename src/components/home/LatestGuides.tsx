@@ -2,6 +2,7 @@ import React from "react";
 import Link from "next/link";
 import { GUIDES } from "@/data/guides";
 import { BookOpen, ArrowRight, Clock } from "lucide-react";
+import { InlineMarkdown } from "@/components/content/MarkdownRenderer";
 
 export function LatestGuides() {
   const latest = GUIDES.slice(0, 6);
@@ -54,7 +55,7 @@ export function LatestGuides() {
                 </h3>
 
                 <p className="mt-2 text-xs sm:text-sm text-slate-600 dark:text-slate-400 line-clamp-2 leading-relaxed">
-                  {guide.intro}
+                  <InlineMarkdown text={guide.intro} />
                 </p>
               </div>
 
