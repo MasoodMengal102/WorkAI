@@ -211,7 +211,7 @@ WorkAI is 100% deployment-ready for Render's **Free Tier** web services and Post
 
 ### Option B: Manual Web Service Setup
 If you deploy manually without Blueprint:
-1. **Build Command**: `npm install && npx prisma generate && npm run build`
+1. **Build Command**: `npm install --include=dev && npx prisma generate && npm run build`
 2. **Start Command**: `node scripts/start-render.mjs` (or `npm start`)
 3. **Environment Variables**:
    - `NODE_ENV`: `production`

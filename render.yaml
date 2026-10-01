@@ -16,7 +16,7 @@ services:
     runtime: node
     plan: free
     region: oregon
-    buildCommand: "npm install && npx prisma generate && npm run build"
+    buildCommand: "npm install --include=dev && npx prisma generate && npm run build"
     startCommand: "node scripts/start-render.mjs"
     healthCheckPath: /api/health
     envVars:
