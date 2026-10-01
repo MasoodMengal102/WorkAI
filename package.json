@@ -5,7 +5,9 @@
   "scripts": {
     "dev": "next dev",
     "build": "next build",
-    "start": "next start",
+    "start": "node scripts/start-render.mjs",
+    "start:next": "next start",
+    "start:render": "node scripts/start-render.mjs",
     "lint": "next lint",
     "test": "vitest run",
     "test:watch": "vitest",

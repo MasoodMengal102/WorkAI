@@ -54,15 +54,21 @@ async function bootstrap() {
 
   // 2. Token protection check
   const expectedToken = process.env.ADMIN_BOOTSTRAP_TOKEN || "bootstrap-workai-initial-admin";
-  const rl = readline.createInterface({
-    input: process.stdin,
-    output: process.stdout,
-  });
-
-  const question = (query) => new Promise((resolve) => rl.question(query, resolve));
+  const isInteractive = Boolean(process.stdin.isTTY);
+  
+  let rl = null;
+  const question = (query) => {
+    if (!rl) {
+      rl = readline.createInterface({
+        input: process.stdin,
+        output: process.stdout,
+      });
+    }
+    return new Promise((resolve) => rl.question(query, resolve));
+  };
 
   try {
-    let inputToken = argMap.token;
+    let inputToken = argMap.token || (isInteractive ? null : expectedToken);
     if (!inputToken) {
       inputToken = await question("Enter ADMIN_BOOTSTRAP_TOKEN (or press enter for default dev token): ");
       if (!inputToken.trim()) inputToken = expectedToken;
@@ -73,8 +79,12 @@ async function bootstrap() {
       process.exit(1);
     }
 
-    let adminEmail = argMap.email;
+    let adminEmail = argMap.email || process.env.ADMIN_BOOTSTRAP_EMAIL || process.env.ADMIN_EMAIL;
     if (!adminEmail) {
+      if (!isInteractive) {
+        console.error("\nError: In non-interactive mode, provide email via --email flag or ADMIN_EMAIL environment variable.");
+        process.exit(1);
+      }
       adminEmail = await question("Enter Super Administrator Email: ");
     }
     adminEmail = adminEmail.trim().toLowerCase();
@@ -84,8 +94,12 @@ async function bootstrap() {
       process.exit(1);
     }
 
-    let adminPassword = argMap.password;
+    let adminPassword = argMap.password || process.env.ADMIN_BOOTSTRAP_PASSWORD || process.env.ADMIN_PASSWORD;
     if (!adminPassword) {
+      if (!isInteractive) {
+        console.error("\nError: In non-interactive mode, provide password via --password flag or ADMIN_PASSWORD environment variable.");
+        process.exit(1);
+      }
       adminPassword = await question("Enter Super Administrator Password (min 10 chars, uppercase, lowercase, symbol): ");
     }
     adminPassword = adminPassword.trim();
@@ -141,7 +155,7 @@ async function bootstrap() {
       console.log(`Admin user: ${adminEmail}`);
     }
   } finally {
-    rl.close();
+    if (rl) rl.close();
     await prisma.$disconnect();
   }
 }

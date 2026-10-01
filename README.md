@@ -193,26 +193,41 @@ Log in at `http://localhost:3000/login` to access the Admin Console at `/admin`.
 
 ---
 
-## ☁️ Deployment Guide (Render)
+## ☁️ Deployment Guide (Render Free Instances)
 
-WorkAI is pre-configured for automated one-click deployment using Render's Blueprint specification (`render.yaml`).
+WorkAI is 100% deployment-ready for Render's **Free Tier** web services and PostgreSQL instances via Infrastructure as Code (`render.yaml`) or manual dashboard configuration.
 
-### Deploying to Render via Blueprint:
-1. Push your repository to GitHub or GitLab.
-2. In the Render Dashboard, select **New +** → **Blueprint**.
-3. Connect your repository. Render will automatically parse `render.yaml` and provision:
-   - **Render PostgreSQL Database** (`workai-postgres`)
-   - **Render Web Service** (`workai-web`)
-4. In the Render Dashboard under Environment Variables, provide your production keys:
-   - `AUTH_SECRET`: Generate a random 32+ character string.
-   - `OPENAI_API_KEY`, `GEMINI_API_KEY`, or `ANTHROPIC_API_KEY`: Provide at least one API key.
-   - `ADSENSE_ENABLED`: Set to `"true"` and supply `ADSENSE_PUBLISHER_ID` when your Google AdSense account is approved.
-5. Apply the blueprint. Render executes `npm run db:deploy` followed by `npm run build` and boots the service.
-6. Run the seed and admin bootstrap commands from the Render Shell tab:
-   ```bash
-   npm run db:seed
-   npm run admin:bootstrap
-   ```
+### Option A: 1-Click Automated Deployment via Blueprint (Recommended)
+1. **Push your code to GitHub / GitLab**.
+2. Go to the [Render Dashboard](https://dashboard.render.com/) and click **New +** → **Blueprint**.
+3. Select your repository. Render automatically reads `render.yaml` and sets up:
+   - **PostgreSQL Database** (`workai-postgres` on Free Plan).
+   - **Web Service** (`workai` on Free Plan) with pre-configured memory tuning (`--max-old-space-size=400`).
+4. During blueprint creation, Render will prompt you for optional secrets:
+   - `GEMINI_API_KEY`: (Recommended) Paste your free Google AI Studio key.
+   - `ADMIN_BOOTSTRAP_PASSWORD`: A secure password (min 10 characters with uppercase, lowercase, and number/symbol) to auto-provision your Super Administrator account upon initial boot!
+5. Click **Apply**.
+6. Render runs the build, launches `scripts/start-render.mjs`, runs database migrations, provisions your Super Admin account, and starts the service.
+
+### Option B: Manual Web Service Setup
+If you deploy manually without Blueprint:
+1. **Build Command**: `npm install && npx prisma generate && npm run build`
+2. **Start Command**: `node scripts/start-render.mjs` (or `npm start`)
+3. **Environment Variables**:
+   - `NODE_ENV`: `production`
+   - `NODE_OPTIONS`: `--max-old-space-size=400`
+   - `NEXT_TELEMETRY_DISABLED`: `1`
+   - `DATABASE_URL`: Your Render internal database URL (or external PostgreSQL URL from Neon/Supabase)
+   - `AUTH_SECRET`: Random 32+ character string
+   - `ADMIN_EMAIL`: `admin@workai.example.com`
+   - `ADMIN_BOOTSTRAP_PASSWORD`: `YourSecurePassword123!`
+   - `GEMINI_API_KEY`: Your Gemini API key
+
+> [!NOTE]
+> **Free Tier Cold Starts & Database Notes**:
+> - **Spin Down**: Free web services sleep after 15 minutes of inactivity; waking up on the first request takes ~30-50s.
+> - **Render Free Postgres**: Render free databases expire after 30 days. For permanent free PostgreSQL persistence, you can create a free database on [Neon](https://neon.tech) or [Supabase](https://supabase.com) and set the `DATABASE_URL` in your Render Environment Variables.
+> - **Fault-Tolerant Startup**: If your database is cold-starting, `scripts/start-render.mjs` automatically retries connections with exponential backoff before running `prisma migrate deploy`. If the database is ever offline, WorkAI gracefully falls back to its built-in verified dataset layer without crashing.
 
 ---
 

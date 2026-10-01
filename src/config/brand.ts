@@ -40,7 +40,11 @@ export const BRAND: BrandConfig = {
   tagline: "Tell us what you want to accomplish, and we will show you how AI can help.",
   description:
     "An international, free AI discovery and workflow engine. Find verified AI tools, follow step-by-step action plans, and access built-in free AI productivity utilities.",
-  domain: process.env.NEXT_PUBLIC_BASE_URL || "https://workai.example.com",
+  domain:
+    process.env.NEXT_PUBLIC_BASE_URL ||
+    process.env.BASE_URL ||
+    process.env.RENDER_EXTERNAL_URL ||
+    "https://workai.onrender.com",
   supportEmail: process.env.SUPPORT_EMAIL || "support@workai.example.com",
   contactEmail: process.env.CONTACT_EMAIL || "contact@workai.example.com",
   legalEntity: "WorkAI Platform (Global Initiative)",
